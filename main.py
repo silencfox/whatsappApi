@@ -54,6 +54,5 @@ def send_whatsapp_message(msg: str):
 
 
 if __name__ == "__main__":
-    print(fecha)
+    #print(fecha)
     send_whatsapp_message(msg="Test message from a Python script! ")
-    #kit.start_server()
