@@ -5,6 +5,7 @@ import pyautogui
 from pynput.keyboard import Key, Controller
 from pdf2image import convert_from_path
 
+
 keyboard = Controller()
 
 #python -m pip install pywhatkit --user
@@ -39,8 +40,8 @@ def send_whatsapp_message(msg: str):
         #    message=msg,
         #    tab_close=True
         #)
-        image="D:\proyectos\Python\whatapp\coop.jpg"
-        phone="+18490000000"
+        image="D:\proyectos\Python\whatsappApi\devops01.png"
+        phone="+18296890063"
         kit.sendwhats_image(phone, image, msg)
 
         time.sleep(10)
@@ -54,5 +55,7 @@ def send_whatsapp_message(msg: str):
 
 
 if __name__ == "__main__":
-    #print(fecha)
+    print(fecha)
     send_whatsapp_message(msg="Test message from a Python script! ")
+
+    #kit.start_server()

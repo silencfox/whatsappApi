@@ -1,0 +1,6 @@
+pywhatkit
+pyautogui
+pynput
+pdf2image
+pywin32
+

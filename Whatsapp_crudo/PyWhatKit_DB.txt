@@ -1,0 +1,12 @@
+Date: 19/9/2024
+Time: 8:10
+Phone Number: +18493504723
+Image: D:\proyectos\Python\whatsappApi\devops01.png
+Caption: Test message from a Python script!
+--------------------
+Date: 19/9/2024
+Time: 8:12
+Phone Number: +18296890063
+Image: D:\proyectos\Python\whatsappApi\devops01.png
+Caption: Test message from a Python script!
+--------------------
