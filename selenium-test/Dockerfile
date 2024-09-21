@@ -2,6 +2,7 @@ FROM python:3.9-slim
 
 # Instala dependencias de sistema
 RUN apt-get update && apt-get install -y \
+    curl \
     wget \
     unzip \
     xvfb \
@@ -10,6 +11,15 @@ RUN apt-get update && apt-get install -y \
     libgconf-2-4 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+RUN add-apt-repository universe
+RUN add-apt-repository multiverse
+RUN apt update
+RUN apt install libvulkan1   
+
+    RUN curl -LO https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    RUN apt-get install -y ./google-chrome-stable_current_amd64.deb
+    RUN rm google-chrome-stable_current_amd64.deb
 
 # Instala las dependencias de Python
 COPY requirements.txt .
