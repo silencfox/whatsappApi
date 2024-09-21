@@ -1,0 +1,14 @@
+services:
+  selenium-test:
+    build: .
+    volumes:
+      - ./screenshots:/app/screenshots  # Monta el directorio de capturas de pantalla
+      - ./scripts:/app/scripts          # Volumen para los scripts Python
+    environment:
+      - DISPLAY=:99
+    networks:
+      - default
+    container_name: selenium-test
+networks:
+  default:
+    driver: bridge

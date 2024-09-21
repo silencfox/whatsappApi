@@ -2,5 +2,7 @@ pywhatkit
 pyautogui
 pynput
 pdf2image
-pywin32
+#pywin32
+evdev
+selenium
 
