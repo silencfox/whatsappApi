@@ -22,12 +22,12 @@ WORKDIR /app/scripts
 # Instala las dependencias de Python
 COPY requirements.txt .
 
-RUN python --version \
-    python -m venv venv
+#RUN python --version \
+#    python -m venv venv
 ## crear entorno env en windows    
 ##RUN venv\Scripts\activate
 ## crear entorno env en linux    
-RUN source venv/bin/activate
+#RUN source venv/bin/activate
 
 RUN pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --no-cache-dir -r requirements.txt
 
