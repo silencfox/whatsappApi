@@ -6,6 +6,7 @@ services:
       - ./scripts:/app/scripts          # Volumen para los scripts Python
     environment:
       - DISPLAY=:99
+      - TZ:"America/Santo_Domingo"
     networks:
       - default
     container_name: selenium-test
