@@ -1,36 +1,66 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.keys import Keys
 import time
-
-# Configuración de Selenium y Chrome en modo headless
-chrome_options = Options()
-chrome_options.add_argument("--headless")
-chrome_options.add_argument("--no-sandbox")
-chrome_options.add_argument("--disable-dev-shm-usage")
-chrome_options.add_argument("--disable-gpu")
-chrome_options.add_argument("--window-size=1920x1080")
+import os
 
 # Configurar ruta para guardar las capturas de pantalla
 screenshot_dir = "/app/screenshots/"
+os.makedirs(screenshot_dir, exist_ok=True)
 
-# Inicia el navegador Chrome en modo headless
-driver = webdriver.Chrome(options=chrome_options)
+def search_in_google(browser_name, search_term):
+    if browser_name == "chrome":
+        chrome_options = ChromeOptions()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920x1080")
+        driver = webdriver.Chrome(options=chrome_options)
 
-# Abre Google y realiza una búsqueda de 'amor'
-#driver.get("https://www.google.com")
-#search_box = driver.find_element("name", "q")
-#search_box.send_keys("amor")
-#search_box.send_keys(Keys.RETURN)
+    elif browser_name == "chromium":
+        chrome_options = ChromeOptions()
+        chrome_options.binary_location = "/usr/bin/chromium"  # Ruta al binario de Chromium
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920x1080")
+        driver = webdriver.Chrome(options=chrome_options)
 
-driver.get("https://web.whatsapp.com/")
+    elif browser_name == "firefox":
+        firefox_options = FirefoxOptions()
+        firefox_options.add_argument("--headless")
+        driver = webdriver.Firefox(options=firefox_options)
 
+    else:
+        raise ValueError("Navegador no soportado: " + browser_name)
 
-# Espera un momento para cargar la página de resultados
-time.sleep(3)
+    try:
+        # Abre Google
+        driver.get("https://www.google.com")
+        time.sleep(2)  # Espera para asegurar la carga de la página
 
-# Toma una captura de pantalla de los resultados de búsqueda
-driver.save_screenshot(screenshot_dir + "search_results.png")
+        # Toma una captura de pantalla de la página principal de Google
+        driver.save_screenshot(screenshot_dir + f"{browser_name}_google_home.png")
 
-# Cierra el navegador
-driver.quit()
+        # Encuentra el cuadro de búsqueda, escribe el término y presiona Enter
+        search_box = driver.find_element("name", "q")
+        search_box.send_keys(search_term)
+        search_box.send_keys(Keys.RETURN)
+
+        # Espera un momento para cargar la página de resultados
+        time.sleep(3)
+
+        # Toma una captura de pantalla de los resultados de búsqueda
+        driver.save_screenshot(screenshot_dir + f"{browser_name}_search_results.png")
+
+    finally:
+        # Cierra el navegador
+        driver.quit()
+
+# Realiza la búsqueda en cada navegador
+search_term = "amor"
+for browser in ["chrome", "chromium", "firefox"]:
+    search_in_google(browser, search_term)
