@@ -4,6 +4,7 @@ services:
     volumes:
       - ./screenshots:/app/screenshots  # Monta el directorio de capturas de pantalla
       - ./scripts:/app/scripts          # Volumen para los scripts Python
+      - ./data/firefox:/data/firefox          # Volumen para los scripts Python
     environment:
       - DISPLAY=:99
       - TZ:"America/Santo_Domingo"

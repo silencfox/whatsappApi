@@ -22,6 +22,12 @@ WORKDIR /app/scripts
 # Instala las dependencias de Python
 COPY requirements.txt .
 
+# Create a directory for Firefox profile (for caching)
+RUN mkdir -p /data/firefox
+
+# Define environment variable for Firefox profile
+ENV FIREFOX_PROFILE_DIR=/data/firefox
+
 #RUN python --version \
 #    python -m venv venv
 ## crear entorno env en windows    
@@ -40,5 +46,5 @@ RUN mkdir -p /app/screenshots
 
 
 # Ejecuta el script de pruebas
-#CMD ["python", "test_selenium.py"]
-CMD ["/bin/bash"]
+CMD ["python", "test_selenium.py"]
+#CMD ["/bin/bash"]
