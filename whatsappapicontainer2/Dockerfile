@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar geckodriver para Firefox
+##https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux-aarch64.tar.gz
 #RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.30.0/geckodriver-v0.30.0-linux64.tar.gz \
 RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux64.tar.gz \
     && tar -xvzf geckodriver-v0.35.0-linux64.tar.gz \
@@ -17,12 +18,12 @@ RUN wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckod
 WORKDIR /app/scripts
 
 # Instalar Selenium
-RUN pip install selenium
+RUN pip install selenium 
 
 RUN mkdir -p /app/screenshots
 RUN mkdir -p /app/scripts
-RUN mkdir -p /app/cache
-RUN mkdir -p /data/firefox
+RUN mkdir -p /app/firefox_profile
+
 
 ENV FIREFOX_PROFILE_DIR=/data/firefox
 
