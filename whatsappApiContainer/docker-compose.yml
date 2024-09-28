@@ -1,46 +1,21 @@
-version: "3"
 services:
-  selenium-hub:
-    image: selenium/hub
-    container_name: selenium-hub
+  whatsapp-selenium:
+    build: .
+    volumes:
+      - ./screenshots:/app/screenshots  # Monta el directorio de capturas de pantalla
+      - ./scripts:/app/scripts          # Volumen para los scripts Python
+      - ./data/firefox:/app/firefox_profile         # Volumen para los scripts Python
+    environment:
+      - DISPLAY=:99
+      - TZ:"America/Santo_Domingo"
+    shm_size: '2gb'
+    networks:
+      - default
     ports:
       - "4442-4444:4442-4444"
-  chrome:
-    image: selenium/node-chrome
-    volumes:
-      - /dev/shm:/dev/shm
-    shm_size: '2gb'
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-  firefox:
-    image: selenium/node-firefox
-    volumes:
-      - /dev/shm:/dev/shm
-    shm_size: '2gb'
-    depends_on:
-      - selenium-hub
-    environment:
-      - SE_EVENT_BUS_HOST=selenium-hub
-      - SE_EVENT_BUS_PUBLISH_PORT=4442
-      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
-
-  test:
-    image: python:3.9-slim
-    container_name: selenium-test
-    depends_on:
-      - selenium-hub
-    volumes:
-      - ./tests:/usr/src/app
+    container_name: whatsapp-selenium
     working_dir: /usr/src/app
     #command: /bin/bash -c "pip install selenium && python test_google_search.py"
-    command: /bin/bash
-
-
-
 
 networks:
   default:
