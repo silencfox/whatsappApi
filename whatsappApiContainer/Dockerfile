@@ -38,8 +38,6 @@ RUN if [ "$TARGETARCH" = "amd64" ]; then \
 RUN rm geckodriver-v0.35.0-linux*.tar.gz
 
 
-WORKDIR /app/scripts
-
 # Instalar Selenium
 RUN pip install selenium 
 
@@ -47,6 +45,8 @@ RUN mkdir -p /app/screenshots
 RUN mkdir -p /app/scripts
 RUN mkdir -p /app/firefox_profile
 
+
+WORKDIR /app/scripts
 
 ENV FIREFOX_PROFILE_DIR=/data/firefox
 
@@ -56,7 +56,7 @@ ENV FIREFOX_PROFILE_DIR=/data/firefox
 # Definir un volumen para guardar capturas de pantalla
 VOLUME /app/screenshots
 VOLUME /app/scripts
-VOLUME /app/cache
 VOLUME /data/firefox
 # Ejecutar el script
-CMD ["python", "/app/enviar_mensaje.py"]
+CMD ["python", "/app/scripts/enviar_mensaje.py"]
+#CMD ["/bin/bash"]
