@@ -19,6 +19,13 @@ options.add_argument('/app/firefox_profile')
 
 # Usar un directorio específico para el perfil de Firefox
 profile_path = "/app/firefox_profile"
+output_folder = "/app/screenshots"
+#target = '"DK Internacional"'
+target = '"Notas"'
+contact_path = f'//span[contains(@title,{target})]'
+message_box_path = '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]'
+
+
 if not os.path.exists(profile_path):
     os.makedirs(profile_path)
 
@@ -41,54 +48,71 @@ wait = WebDriverWait(driver, 600)
 driver.get("https://web.whatsapp.com")
 print("Esperando que la página cargue completamente...")
 
-# Esperar hasta que se cargue completamente la página de WhatsApp Web (hasta que aparezca un elemento principal)
-wait.until(EC.presence_of_element_located((By.XPATH, "//canvas[@aria-label='Scan me!'] | //div[@id='pane-side']")))
-
-# Verificar si existe el código QR en la página
-try:
-    qr_code = driver.find_element(By.XPATH, "//canvas[@aria-label='Scan me!']")
-    print("Código QR encontrado. Capturando pantalla...")
-    
-    # Capturar la pantalla del código QR
-    screenshot_path = "/app/screenshots/codigo_qr.png"
+def capturaPantalla(cap_name):
+    # Capturar la pantalla después de seleccionar el destinatario
+    screenshot_path = f"{output_folder}/{cap_name}.png"
     driver.save_screenshot(screenshot_path)
-    print(f"Escanea el código QR desde la imagen capturada en {screenshot_path}")
+    print(f"captura {screenshot_path}")
+
+# Esperar hasta que se cargue completamente la página de WhatsApp Web (hasta que aparezca un elemento principal)
+try:
+    # Esperamos hasta que aparezca el código QR o el menú principal
+    WebDriverWait(driver, 40).until(
+        EC.any_of(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "canvas")),  # Código QR
+            #EC.presence_of_element_located((By.XPATH, "//*[contains(text(),'Cargando tus chats')]"))  # Mensaje de carga de chats
+            EC.presence_of_element_located((By.XPATH, contact_path))  # Mensaje de carga de chats
+            #By.CSS_SELECTOR, "div[data-testid='pane-side']"
+        )
+    )
+
+    while driver.find_elements(By.CSS_SELECTOR, "canvas"):
+        capturaPantalla("QR")
+        print("Se detectó el código QR o el menú principal de WhatsApp.")
+        print("Favor escanear el codigo para proceder")
+        time.sleep(15)  # Esperar un tiempo antes de volver a verificar
+
+    # Verificar qué evento ocurrió
     
-    # Esperar para que el usuario escanee el código QR
-    time.sleep(40)
+    if driver.find_elements(By.XPATH, contact_path):
+        print("Contacto detectado detectado.")
+    elif driver.find_elements(By.CSS_SELECTOR, "div[data-testid='chat-list']"):
+        print("Menú principal de WhatsApp detectado.")
+    else :
+        print("No se detecto ningun evento.")
 
 except Exception as e:
-    print("No se encontró código QR. Continuando con el flujo...")
+    print("No se detectó el código QR ni el menú principal a tiempo:", e)
+    driver.quit()
+
+
 
 # Continuar con las acciones si no hay código QR o si ya se escaneó
 
 # Definir el contacto y buscar el elemento por su título
-target = '"DK Internacional"'
-contact_path = f'//span[contains(@title,{target})]'
 contact = wait.until(EC.presence_of_element_located((By.XPATH, contact_path)))
 contact.click()
 
 # Capturar la pantalla después de seleccionar el destinatario
-screenshot_path = "/app/screenshots/Destinatario.png"
-driver.save_screenshot(screenshot_path)
-print(f"Destinatario {screenshot_path}")
+capturaPantalla("Destinatario")
 
 # Buscar el campo de mensaje usando XPath
-message_box_path = '//*[@id="main"]/footer/div[1]/div/span/div/div[2]/div[1]/div/div[1]'
-message_box = wait.until(EC.presence_of_element_located((By.XPATH, message_box_path)))
-
 # Usar ActionChains para enviar el mensaje
-actions = ActionChains(driver)
-actions.move_to_element(message_box)
-actions.click()
-actions.send_keys("successful")
-actions.send_keys(Keys.ENTER)
-actions.perform()  # Ejecutar la cadena de acciones
 
-# Capturar la pantalla después de enviar el mensaje
-screenshot_path = "/app/screenshots/MsgEnviado.png"
-driver.save_screenshot(screenshot_path)
-print(f"Mensaje Enviado {screenshot_path}")
+def EnviarMsg(message_box_path, msg):
+    message_box = wait.until(EC.presence_of_element_located((By.XPATH, message_box_path)))
+    actions = ActionChains(driver)
+    actions.move_to_element(message_box)
+    actions.click()
+    actions.send_keys(msg)
+    actions.send_keys(Keys.ENTER)
+    actions.perform()  # Ejecutar la cadena de acciones
+
+    # Capturar la pantalla después de enviar el mensaje
+    capturaPantalla("MsgEnviado")
+
+EnviarMsg(message_box_path, "Hola Mundo")
+
 
 # Cerrar el navegador
 time.sleep(15)

@@ -58,5 +58,5 @@ VOLUME /app/screenshots
 VOLUME /app/scripts
 VOLUME /data/firefox
 # Ejecutar el script
-CMD ["python", "/app/scripts/enviar_mensaje.py"]
-#CMD ["/bin/bash"]
+#CMD ["python", "/app/scripts/enviar_mensaje.py"]
+CMD ["/bin/bash"]
