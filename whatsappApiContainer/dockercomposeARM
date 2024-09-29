@@ -2,7 +2,11 @@ version: '3.8'
 
 services:
   whatsapp-selenium:
-    build: .
+    build:
+      context: .       # Directorio donde se encuentra el Dockerfile
+      dockerfile: DockerfileARM  # Nombre del Dockerfile
+      args:
+        TARGETARCH: "arm64"   # Arquitectura arm64 para Raspberry Pi 5
     container_name: whatsapp-selenium
 
     # Definir volúmenes para persistencia de datos
