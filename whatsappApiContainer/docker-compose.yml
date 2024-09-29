@@ -16,7 +16,7 @@ services:
     container_name: whatsapp-selenium
     working_dir: /app/scripts
   
-    command: /bin/bash
+    command: ["python", "/app/scripts/enviar_mensaje.py"]
     #command: /bin/bash -c "pip install selenium && python test_google_search.py"
 
 networks:
