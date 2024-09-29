@@ -1,16 +1,14 @@
-# Usar imagen base ligera de Python
-FROM python:3.9-slim
+# Etapa 1: Construcción de dependencias
+FROM python:3.9-slim AS builder
 
 # Establecer variables ARG para la arquitectura en tiempo de construcción
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETOS
 
-# Instalar dependencias necesarias en una sola capa
+# Instalar dependencias necesarias solo para construcción
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    firefox-esr \
     wget \
-    xvfb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,8 +24,29 @@ RUN case "$TARGETARCH" in \
     chmod +x /usr/local/bin/geckodriver && \
     rm /tmp/geckodriver.tar.gz
 
-# Instalar Selenium en una capa independiente
+# Instalar Selenium solo en la etapa de construcción
 RUN pip install --no-cache-dir selenium
+
+# Etapa 2: Imagen final
+FROM python:3.9-slim
+
+# Establecer variables ARG para la arquitectura en tiempo de construcción
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETOS
+
+# Instalar Firefox y Xvfb en la imagen final
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    firefox-esr \
+    xvfb \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar Geckodriver desde la etapa de construcción
+COPY --from=builder /usr/local/bin/geckodriver /usr/local/bin/geckodriver
+
+# Instalar Selenium en la imagen final desde el builder
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
 # Crear directorios necesarios
 RUN mkdir -p /app/{screenshots,scripts,firefox_profile}
@@ -41,8 +60,8 @@ ENV FIREFOX_PROFILE_DIR=/data/firefox
 # Añadir el script de Python al contenedor (se activa cuando copies los scripts)
 # COPY ./scripts/enviar_mensaje.py /app/scripts/enviar_mensaje.py
 
-# Definir volúmenes para datos persistentes
+# Definir volúmenes para persistencia de datos
 VOLUME /app/screenshots /app/scripts /data/firefox
 
-# Definir el comando por defecto para ejecutar el script
+# Comando por defecto para ejecutar el script
 CMD ["python", "/app/scripts/enviar_mensaje.py"]
