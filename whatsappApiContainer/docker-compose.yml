@@ -1,23 +1,37 @@
+version: '3.8'
+
 services:
   whatsapp-selenium:
     build: .
+    container_name: whatsapp-selenium
+
+    # Definir volúmenes para persistencia de datos
     volumes:
-      - ./screenshots:/app/screenshots  # Monta el directorio de capturas de pantalla
-      - ./scripts:/app/scripts          # Volumen para los scripts Python
-      - ./data/firefox:/app/firefox_profile         # Volumen para los scripts Python
+      - ./screenshots:/app/screenshots   # Capturas de pantalla almacenadas localmente
+      - ./scripts:/app/scripts           # Directorio de scripts Python
+      - ./data/firefox:/app/firefox_profile  # Directorio para el perfil de Firefox
+
+    # Variables de entorno
     environment:
-      - DISPLAY=:99
-      - TZ:"America/Santo_Domingo"
+      DISPLAY: ":99"
+      TZ: "America/Santo_Domingo"
+
+    # Optimización de recursos compartidos
     shm_size: '2gb'
+
+    # Redes
     networks:
       - default
+
+    # Exposición de puertos (si es necesario)
     ports:
       - "4442-4444:4442-4444"
-    container_name: whatsapp-selenium
+
+    # Establecer el directorio de trabajo
     working_dir: /app/scripts
-  
-    command: ["python", "/app/scripts/enviar_mensaje.py"]
-    #command: /bin/bash -c "pip install selenium && python test_google_search.py"
+
+    # Comando para ejecutar la aplicación
+    command: ["python", "enviar_mensaje.py"]
 
 networks:
   default:
