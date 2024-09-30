@@ -25,7 +25,11 @@ cd D:\proyectos\Python\whatsappApi\whatsappapicontainer2
 python -m venv env
 
 # Activa el entorno virtual
+# Windows
 .\env\Scripts\Activate
+
+# Linux 
+source nombre_entorno/bin/activate
 
 # Instala un paquete, por ejemplo, requests
 pip install -r requirements.txt
