@@ -7,6 +7,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service 
 
 # Configuración inicial
 PROFILE_PATH = "/app/firefox_profile"
@@ -24,6 +26,9 @@ def start_xvfb():
 # Inicializar el WebDriver
 def initialize_driver():
     options = webdriver.FirefoxOptions()
+    options.binary_location = r'/usr/bin/firefox'
+    #driverService = Service('/usr/local/bin/geckodriver')
+    #options.setBinary("/usr/bin/firefox");
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
@@ -32,8 +37,10 @@ def initialize_driver():
 
     if not os.path.exists(PROFILE_PATH):
         os.makedirs(PROFILE_PATH)
-
-    driver = webdriver.Firefox(options=options)
+    
+    service = Service(GeckoDriverManager().install())
+    
+    driver = webdriver.Firefox(service=service, options=options)
     return driver
 
 # Capturar pantallas

@@ -11,21 +11,30 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     firefox-esr \
     wget \
     xvfb \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    curl \
+    build-essential \
+    python3-dev \
+    libffi-dev \
+    libssl-dev 
+    #zlib1g-dev \
+    #&& apt-get clean \
+    #&& rm -rf /var/lib/apt/lists/*
+
+#RUN curl https://sh.rustup.rs -sSf | sh
+#RUN cargo install geckodriver
 
 # Descargar e instalar Geckodriver específico para arm64
-RUN if [ "$TARGETARCH" = "arm64" ]; then \
-        wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux-aarch64.tar.gz -O /tmp/geckodriver.tar.gz; \
-    else \
-        echo "Arquitectura no soportada: $TARGETARCH" && exit 1; \
-    fi && \
-    tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin && \
-    chmod +x /usr/local/bin/geckodriver && \
-    rm /tmp/geckodriver.tar.gz
+#RUN if [ "$TARGETARCH" = "arm64" ]; then \
+#        wget https://github.com/mozilla/geckodriver/releases/download/v0.35.0/geckodriver-v0.35.0-linux-aarch64.tar.gz -O /tmp/geckodriver.tar.gz; \
+#    else \
+#        echo "Arquitectura no soportada: $TARGETARCH" && exit 1; \
+#    fi && \
+#    tar -xzf /tmp/geckodriver.tar.gz -C /usr/local/bin && \
+#    chmod +x /usr/local/bin/geckodriver && \
+#    rm /tmp/geckodriver.tar.gz
 
 # Instalar Selenium en una capa independiente
-RUN pip install --no-cache-dir selenium
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Crear directorios necesarios
 RUN mkdir -p /app/{screenshots,scripts,firefox_profile}

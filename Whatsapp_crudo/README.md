@@ -15,7 +15,7 @@ python -m venv env
 # venv\Scripts\Activate.ps1
 
 # Linux 
-source nombre_entorno/bin/activate
+source env/bin/activate
 
 # Instala un paquete, por ejemplo, requests
 pip install -r requirements.txt

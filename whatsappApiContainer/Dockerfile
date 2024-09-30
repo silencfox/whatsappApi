@@ -25,7 +25,7 @@ RUN case "$TARGETARCH" in \
     rm /tmp/geckodriver.tar.gz
 
 # Instalar Selenium solo en la etapa de construcción
-RUN pip install --no-cache-dir selenium
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Etapa 2: Imagen final
 FROM python:3.9-slim
