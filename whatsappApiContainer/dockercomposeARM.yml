@@ -35,7 +35,7 @@ services:
     working_dir: /app/scripts
 
     # Comando para ejecutar la aplicación
-    command: ["python", "enviar_mensaje.py"]
+    command: ["python", "enviar_mensajeARM.py"]
 
 networks:
   default:

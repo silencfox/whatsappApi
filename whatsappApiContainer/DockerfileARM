@@ -43,4 +43,4 @@ ENV FIREFOX_PROFILE_DIR=/data/firefox
 VOLUME /app/screenshots /app/scripts /data/firefox
 
 # Definir el comando por defecto para ejecutar el script
-CMD ["python", "/app/scripts/enviar_mensaje.py"]
+CMD ["python", "/app/scripts/enviar_mensajeARM.py"]
