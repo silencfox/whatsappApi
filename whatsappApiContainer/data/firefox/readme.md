@@ -1,0 +1,1 @@
+Aqui se guarda la data del navegador
