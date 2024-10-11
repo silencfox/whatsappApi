@@ -6,6 +6,9 @@ ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETOS
 
+RUN mkdir -p /app
+COPY ./requirements.txt /app/requirements.txt
+
 # Instalar dependencias necesarias solo para construcción
 RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
@@ -25,7 +28,7 @@ RUN case "$TARGETARCH" in \
     rm /tmp/geckodriver.tar.gz
 
 # Instalar Selenium solo en la etapa de construcción
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Etapa 2: Imagen final
 FROM python:3.9-slim
@@ -41,6 +44,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+	
 
 # Copiar Geckodriver desde la etapa de construcción
 COPY --from=builder /usr/local/bin/geckodriver /usr/local/bin/geckodriver

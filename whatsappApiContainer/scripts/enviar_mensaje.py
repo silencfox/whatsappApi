@@ -88,6 +88,7 @@ def automate_whatsapp():
         # Enviar un mensaje
         enviar_mensaje(driver, MESSAGE_BOX_PATH, "Hola Mundo")
 
+
     except Exception as e:
         print("Error:", e)
     finally:
@@ -101,6 +102,7 @@ def enviar_mensaje(driver, message_box_path, msg):
     message_box = wait.until(EC.presence_of_element_located((By.XPATH, message_box_path)))
     actions = ActionChains(driver)
     actions.move_to_element(message_box).click().send_keys(msg).send_keys(Keys.ENTER).perform()
+    time.sleep(25)
     captura_pantalla(driver, "MsgEnviado")
 
 if __name__ == "__main__":
