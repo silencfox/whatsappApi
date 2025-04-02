@@ -1,3 +1,5 @@
 #pywhatkit
 selenium
 webdriver-manager
+requests
+cx_Oracle
